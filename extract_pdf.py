@@ -142,11 +142,20 @@ for p0 in pdf.pages:
             ww_2 = " ".join(word[cell[i][j]].splitlines())           
             # Whether data is group
             if i < len(df.index)-2 and k > j: 
-                if (j == 0 or (j > 0 and cell[i+1][j-1] != cell[i+1][j])) and (k == len(df.columns) - 1 or (k < len(df.columns) - 1 and cell[i+1][k] != cell[i+1][k+1])) and (cell[i+1][j] != cell[i+1][k] or ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary"]) :
+                if (j == 0 or (j > 0 and cell[i+1][j-1] != cell[i+1][j])) and (k == len(df.columns) - 1 or (k < len(df.columns) - 1 and cell[i+1][k] != cell[i+1][k+1])) and (cell[i+1][j] != cell[i+1][k] or ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary", "Mud/Fluid Checks", "Weather Conditions", "BHA Information", "Drilling Parameters", "Leak Off and Formation Integrity Tests", "Casing Pressure Tests", "BOP Pressure Tests"]) :
                     # Get the number of rows in a group
                     for ii in range(i+2, len(df.index) - 1): 
                         if ww_2 == "Well Information" and word[cell[ii][j]] == "Health and Safety Summary": break
                         if ww_2 == "Daily Cost/Time Summary" and word[cell[ii][j]] == "Time Log": break
+                        if ww_2 == "Mud/Fluid Checks" and word[cell[ii][j]] == "Weather Conditions": break
+                        if ww_2 == "Weather Conditions" and word[cell[ii][j]] == "Anchors": break
+                        if ww_2 == "BHA Information" and word[cell[ii][j]] == "Drilling Parameters": break
+                        if ww_2 == "Drilling Parameters" and word[cell[ii][j]] == "Directional": break
+                        if ww_2 == "Leak Off and Formation Integrity Tests" and word[cell[ii][j]] == "Casing Pressure Tests": break
+                        if ww_2 == "Casing Pressure Tests" and word[cell[ii][j]] == "BOP Pressure Tests": break
+                        if ww_2 == "BOP Pressure Tests" and word[cell[ii][j]] == "Equipment Pressure Test Data": break
+                        if ww_2 == "Casing Pressure Tests" and word[cell[ii][j]] == "BOP Pressure Tests": break
+                        if ww_2 == "Casing Pressure Tests" and word[cell[ii][j]] == "BOP Pressure Tests": break
 
 
                         if ww_2 == "Management Summary" and word[cell[ii][j]] == "Mud Checks": break 
@@ -157,8 +166,8 @@ for p0 in pdf.pages:
                         if ww_2 == "Deviation Survey (Tie point) -  TABU-B19 Actual Survey" and word[cell[ii][j]] == "Survey Data - Shows all surveys entered during the report period": break
 
 
-                        if not ((j == 0 or (j > 0 and cell[ii][j-1] != cell[ii][j])) and (k == len(df.columns) - 1 or (k < len(df.columns) - 1 and cell[ii][k] != cell[ii][k+1])) and (cell[ii][j] != cell[ii][k] or ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary"])) : break
-                        if not(ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary"]):
+                        if not ((j == 0 or (j > 0 and cell[ii][j-1] != cell[ii][j])) and (k == len(df.columns) - 1 or (k < len(df.columns) - 1 and cell[ii][k] != cell[ii][k+1])) and (cell[ii][j] != cell[ii][k] or ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary", "Mud/Fluid Checks", "Weather Conditions", "BHA Information", "Drilling Parameters", "Leak Off and Formation Integrity Tests", "Casing Pressure Tests", "BOP Pressure Tests"])) : break
+                        if not(ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary", "Mud/Fluid Checks", "Weather Conditions", "BHA Information", "Drilling Parameters", "Leak Off and Formation Integrity Tests", "Casing Pressure Tests", "BOP Pressure Tests"]):
                             for jj in range(j+1, k+1): 
                                 if cell[ii][jj] - cell[ii-1][jj] != cell[ii][j] - cell[ii-1][j]:break
                             else:
@@ -253,7 +262,7 @@ for p0 in pdf.pages:
                                                     write_into_file("\n")
                                                     write_into_file(ss)
                                                     break
-                    elif ww_2 in ["Health and Safety Summary", "Safety Checks", "Observation Cards", "Stop the Job", "Daily Offline Time Log Summary", "00:00 - 6:00 Time Log"]:
+                    elif ww_2 in ["Health and Safety Summary", "Safety Checks", "Observation Cards", "Stop the Job", "Daily Offline Time Log Summary", "00:00 - 6:00 Time Log", "Anchors", "Transportation Information", "Directional", "Drill String Components", "Drill Bits", "Deviation Information", "Casing Information", "Equipment Pressure Test Data", "Tubing Strings", "Perforations", "Daily Contacts", "Personnel On Site", "Bulks/Consumables Information"]:
                         # col header
                         pre_cell = -2
                         header = []
@@ -386,7 +395,7 @@ for p0 in pdf.pages:
                             for jj in range(j, k+1):
                                 cell[iii][jj] = -1
 
-                    elif ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary"]:
+                    elif ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary", "Mud/Fluid Checks", "Weather Conditions", "Weather Conditions", "BHA Information", "Drilling Parameters", "Leak Off and Formation Integrity Tests", "Casing Pressure Tests", "BOP Pressure Tests"]:
                         print("www = " + ww_2) 
                         pre_cell = -2
                         ss += "{\n"
@@ -394,7 +403,9 @@ for p0 in pdf.pages:
                             sss = ""
                             for jj in range(j, k + 1):
                                 if cell[iii][jj] != pre_cell:
-                                    if sss != "" and word[cell[iii][jj]] != "": sss += ", "
+                                    if sss != "" and word[cell[iii][jj]] != "": sss += ", "  
+                                    if word[cell[iii][jj]].find("Mud/Fluid Check Depth") > -1 or word[cell[iii][jj]].find("BHA # 4") > -1:
+                                        word[cell[iii][jj]] = "\n".join(word[cell[iii][jj]].split(": "))
                                     ww = " ".join(word[cell[iii][jj]].splitlines()) 
                                     if len(word[cell[iii][jj]].splitlines()) > 0 :
                                         sss += '"' + remove_special_characters(word[cell[iii][jj]].splitlines()[0]) + '": "'
