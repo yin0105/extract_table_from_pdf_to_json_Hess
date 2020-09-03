@@ -154,17 +154,6 @@ for p0 in pdf.pages:
                         if ww_2 == "Leak Off and Formation Integrity Tests" and word[cell[ii][j]] == "Casing Pressure Tests": break
                         if ww_2 == "Casing Pressure Tests" and word[cell[ii][j]] == "BOP Pressure Tests": break
                         if ww_2 == "BOP Pressure Tests" and word[cell[ii][j]] == "Equipment Pressure Test Data": break
-                        if ww_2 == "Casing Pressure Tests" and word[cell[ii][j]] == "BOP Pressure Tests": break
-                        if ww_2 == "Casing Pressure Tests" and word[cell[ii][j]] == "BOP Pressure Tests": break
-
-
-                        if ww_2 == "Management Summary" and word[cell[ii][j]] == "Mud Checks": break 
-                        if ww_2 == "Mud Checks" and word[cell[ii][j]] == "Mud Volume Summary": break
-                        if ww_2 == "Mud Volume Summary" and word[cell[ii][j]] == "Daily Job Supply Summary": break
-                        if ww_2 == "String No. 3" and word[cell[ii][j]] == "String No. 3  - Bit Information": break
-                        if ww_2 == "String No. 3  - Bit Information" and word[cell[ii][j]] == "String Components": break
-                        if ww_2 == "Deviation Survey (Tie point) -  TABU-B19 Actual Survey" and word[cell[ii][j]] == "Survey Data - Shows all surveys entered during the report period": break
-
 
                         if not ((j == 0 or (j > 0 and cell[ii][j-1] != cell[ii][j])) and (k == len(df.columns) - 1 or (k < len(df.columns) - 1 and cell[ii][k] != cell[ii][k+1])) and (cell[ii][j] != cell[ii][k] or ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary", "Mud/Fluid Checks", "Weather Conditions", "BHA Information", "Drilling Parameters", "Leak Off and Formation Integrity Tests", "Casing Pressure Tests", "BOP Pressure Tests"])) : break
                         if not(ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary", "Mud/Fluid Checks", "Weather Conditions", "BHA Information", "Drilling Parameters", "Leak Off and Formation Integrity Tests", "Casing Pressure Tests", "BOP Pressure Tests"]):
@@ -286,114 +275,7 @@ for p0 in pdf.pages:
                                 cell[iii][jj] = -1
                             sss = '{' + sss + '}'
                             if ss != "": ss += ", "
-                            ss += sss
-                    elif ww_2 in ["PERSONNEL"]: 
-                        # Double Column Header
-                        pre_cell = -2
-                        sss = ""
-                        for jj in range(j, k + 1):
-                            if cell[i+1][jj] != pre_cell:
-                                if sss != "": sss += ", "
-                                sss += '"' + '": "'.join(" ".join(word[cell[i+1][jj]].splitlines()).split(":")) + '"'
-                                pre_cell = cell[i+1][jj]
-                            cell[i+1][jj] = -1
-                        # sss = '"' + '": "'.join(sss.split(":")) + '"'
-                        sss = '{' + sss + '}'
-                        if ss != "": ss += ", "
-                        ss += sss
-                        # Get the columns data in group
-                        pre_cell = -2
-                        header = []
-                        for jj in range(j, k + 1):
-                            if cell[i+2][jj] != pre_cell:
-                                header.append(" ".join(word[cell[i+2][jj]].splitlines()))
-                                pre_cell = cell[i+2][jj]
-                            cell[i+2][jj] = -1
-                        # Get the columns data in group
-                        for iii in range(i + 3, ii): 
-                            header_cc = 0
-                            sss = ""
-                            hh_count = 0
-                            for jj in range(j, k + 1):
-                                if cell[iii][jj] != pre_cell:
-                                    if header[header_cc] != "":
-                                        hh_count += 1
-                                        if sss != "": 
-                                            if hh_count == 3:
-                                                sss += "}, {"
-                                            else:
-                                                sss += ", "
-                                        sss += '"' + header[header_cc] + '": "' + remove_special_characters(word[cell[iii][jj]]) + '" '
-                                    pre_cell = cell[iii][jj]
-                                    header_cc += 1
-                                cell[iii][jj] = -1
-                            sss = '{' + sss + '}'
-                            if ss != "": ss += ", "
-                            ss += sss
-                    elif ww_2 == "SUPPORT CRAFT": # if name of group is ...
-                        pre_cell = -2
-                        header = []
-                        # Get the columns data in group
-                        for jj in range(j, k + 1):
-                            if cell[i+1][jj] != pre_cell:
-                                header.append(" ".join(word[cell[i+1][jj]].splitlines()))
-                                pre_cell = cell[i+1][jj]
-                            cell[i+1][jj] = -1
-                        # Get the columns data in group
-                        for iii in range(len(word[cell[i+2][j]].splitlines())): 
-                            header_cc = 0
-                            sss = ""
-                            for jj in range(j, k + 1):
-                                if cell[i+2][jj] != pre_cell:
-                                    if header[header_cc] != "":
-                                        if sss != "": sss += ", "
-                                        if len(word[cell[i+2][jj]].splitlines()) == 0 :
-                                            sss += '"' + remove_special_characters(header[header_cc]) + '": "" '
-                                        else:
-                                            sss += '"' + remove_special_characters(header[header_cc]) + '": "' + remove_special_characters(word[cell[i+2][jj]].splitlines()[iii]) + '" '
-                                    pre_cell = cell[i+2][jj]
-                                    header_cc += 1
-                                # cell[i+2][jj] = -1
-                            sss = '{' + sss + '}'
-                            if ss != "": ss += ", "
-                            ss += sss
-                    elif ww_2 in [         "BULKS", "PUMP/HYDRAULICS", "BIT DATA"]: 
-                        for jj in range(j + 1, k + 1):
-                            if cell[i+1][jj] == cell[i+1][jj-1]: continue
-                            sss = ""
-                            for iii in range(i + 1, ii):                                 
-                                if ' '.join(word[cell[iii][j]].splitlines()) == '' : continue
-                                if sss != "" : sss += ", "
-                                sss += '"' + ' '.join(word[cell[iii][j]].splitlines()) + '": "' + remove_special_characters(' '.join(word[cell[iii][jj]].splitlines())) + '"'
-                            sss = '{' + sss + '}'
-                            
-                            if ss != "": ss += ", "
-                            ss += sss
-                        for iii in range(i + 1, ii):
-                            for jj in range(j, k+1):
-                                cell[iii][jj] = -1
-                    elif ww_2 in ["PIPE DATA"]: 
-                        # Multiple Row Header
-                        jj_count = 0
-                        base_j = j
-                        for jj in range(j + 1, k + 1):
-                            if cell[i+1][jj] == cell[i+1][jj-1]: continue
-                            jj_count += 1
-                            if jj_count % 2 == 0:
-                                base_j = jj
-                                continue
-
-                            sss = ""
-                            for iii in range(i + 1, ii): 
-                                if sss != "" : sss += ", "
-                                sss += '"' + remove_special_characters(' '.join(word[cell[iii][base_j]].splitlines())) + '": "' + remove_special_characters(' '.join(word[cell[iii][jj]].splitlines())) + '"'
-                            sss = '{' + sss + '}'
-                            
-                            if ss != "": ss += ", "
-                            ss += sss
-                        for iii in range(i +1, ii):
-                            for jj in range(j, k+1):
-                                cell[iii][jj] = -1
+                            ss += sss                    
 
                     elif ww_2 in ["Well Information", "Daily Operations", "Daily Cost/Time Summary", "Mud/Fluid Checks", "Weather Conditions", "Weather Conditions", "BHA Information", "Drilling Parameters", "Leak Off and Formation Integrity Tests", "Casing Pressure Tests", "BOP Pressure Tests"]:
                         print("www = " + ww_2) 
@@ -460,16 +342,11 @@ for p0 in pdf.pages:
                     ww_2 = remove_special_characters(ww_2)
                     ww_2 = '"' + ww_2 + '": ""'
 
-                # my_file.write(ww_2)
-                if ww_2.__contains__("Currentstatus"):
-                    ww_2 = ww_2.replace('6"', '6\\"').replace('5.5"', '5.5\\"').replace('10"', '10\\"').replace('2"', '2\\"').strip()
+                
 
                 write_into_file(ww_2)
                 write_started = True
 
-            # if ss != "": my_file.write(ss)
-            if ss != "" and ww_2.__contains__("OPERATION SUMMARY"):
-                ss = ss.replace('6"', '6\\"').replace('5.5"', '5.5\\"').replace('10"', '10\\"').replace('2"', '2\\"').strip()
 
             if ss != "": write_into_file(ss)
 
